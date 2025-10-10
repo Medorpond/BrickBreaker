@@ -3,32 +3,31 @@ using UnityEngine;
 
 public class Pool<TItem>: MonoBehaviour where TItem : PoolItem<TItem>
 {
+    [Header("Pool Data")]
     [SerializeField] private TItem model;
-    [SerializeField] private int maxSize;
     [SerializeField] private int initSize;
+    [field: SerializeField] public int MaxSize { get; private set; }
+    [Space(10f)]
 
     private readonly Stack<TItem> pool = new();
 
-    public void InitPool(TItem _model, int _initSize, int _maxSize)
+    private void Awake()
     {
-        model = _model;
-        initSize = _initSize;
-        maxSize = _maxSize;
-
-        if (initSize > maxSize)
-        {
-            (initSize, maxSize) = (maxSize, initSize); // swap
+        if (initSize > MaxSize) { 
+            (initSize, MaxSize) = (MaxSize, initSize); // Swap
+            Debug.LogWarning($"InitSize({initSize}) cannot be Larger than MaxSize({MaxSize}). Value adjusted.");
         }
 
         FillPool(initSize);
     }
 
-    public TItem GetItem()
+    public TItem GetItem(Vector3 initPos)
     {
         if (pool.Count == 0) return CreateItem();
         else
         {
             var nextItem =  pool.Pop();
+            nextItem.transform.position = initPos;
             nextItem.gameObject.SetActive(true);
             return nextItem;
         } 
@@ -36,7 +35,7 @@ public class Pool<TItem>: MonoBehaviour where TItem : PoolItem<TItem>
 
     public void RetrieveItem(TItem item)
     {
-        if (pool.Count < maxSize)
+        if (pool.Count < MaxSize)
         {
             item.gameObject.SetActive(false);
             pool.Push(item);
@@ -49,7 +48,7 @@ public class Pool<TItem>: MonoBehaviour where TItem : PoolItem<TItem>
 
     public void FillPool(int size)
     {
-        size = Mathf.Min(size, maxSize);
+        size = Mathf.Min(size, MaxSize);
 
         for (int i = 0; i < size; i++)
         {
