@@ -12,7 +12,10 @@ public class PlayerController : MonoBehaviour, IItemEffectable
     [SerializeField, Min(0)] private float launchPower = 5f;
     [SerializeField, Min(0)] private float ballOffset = 0.5f;
     [SerializeField, Min(0)] private float moveLimit;
-    
+    //TESTONLY
+    [SerializeField, Min(0)] private int life = 3;
+    //TESTONLY
+
 
     private bool isLoaded = false;
     private Ball ball;
@@ -22,7 +25,7 @@ public class PlayerController : MonoBehaviour, IItemEffectable
 
     private void OnEnable()
     {
-        BallManager.Instance.OnAllBallLost += Reload;
+        BallManager.Instance.OnAllBallLost += OnAllBallLost;
         ItemManager.Instance.PaddleItem += OnRecieveItem;
     }
 
@@ -42,7 +45,7 @@ public class PlayerController : MonoBehaviour, IItemEffectable
 
     private void OnDisable()
     {
-        BallManager.Instance.OnAllBallLost -= Reload;
+        BallManager.Instance.OnAllBallLost -= OnAllBallLost;
         ItemManager.Instance.PaddleItem -= OnRecieveItem;
     }
     #endregion
@@ -54,6 +57,13 @@ public class PlayerController : MonoBehaviour, IItemEffectable
         targetPos.x = Mathf.Clamp(targetPos.x, -moveLimit, moveLimit);
         targetPos.y = currentPos.y;
         transform.position = Vector2.Lerp(currentPos, targetPos, lerpSpeed* Time.fixedDeltaTime);
+    }
+
+    private void OnAllBallLost()
+    {
+        life--;
+        if (life <= 0) StageManager.Instance.GameOver(false);
+        else Reload();
     }
 
     private void Reload()
@@ -86,7 +96,7 @@ public class PlayerController : MonoBehaviour, IItemEffectable
 
     private void GetUserInput()
     {
-        if (Input.GetKeyUp(KeyCode.Space))
+        if (Input.GetKeyUp(KeyCode.Mouse0))
         {
             OnUserInput();
         }

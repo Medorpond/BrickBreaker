@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class Brick : MonoBehaviour
 {
-    [SerializeField] private float score;
+    [SerializeField] private int score;
 
     #region Events
     public event Action<Ball> OnHit;
@@ -23,6 +23,7 @@ public class Brick : MonoBehaviour
     public void Break()
     {
         OnBreak?.Invoke();
+        BrickManager.Instance.OnBrickBreak(score);
         Destroy(gameObject);
     }
 }
