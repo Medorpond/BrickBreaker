@@ -5,11 +5,14 @@ public class Ball : PoolItem<Ball>, IItemEffectable
     Rigidbody2D rbody;
     [SerializeField, Min(0)] private float minSpeed;
     [SerializeField, Min(0)] private float maxSpeed;
+    [SerializeField, Min(0)] private float minEscapeSpeed;
+    [SerializeField, Min(0)] private float epsilonSpeed;
 
     private void Awake()
     {
         rbody = GetComponent<Rigidbody2D>();
     }
+
 
     private void OnEnable()
     {
@@ -20,12 +23,22 @@ public class Ball : PoolItem<Ball>, IItemEffectable
         BallManager.Instance.OnBallItemTrigger-= OnRecieveItem;
     }
 
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        EnsureMinAxisSpeed();
+    }
+
     public void Split(int num)
     {
         if (num <= 1) return;
 
         Vector2 OriginalDir = rbody.linearVelocity.normalized;
         float originalSpeed = rbody.linearVelocity.magnitude;
+
+        if(Mathf.Abs(originalSpeed) < epsilonSpeed)
+        {
+            return;
+        }
 
         float angleStep = 180f / (num + 1);
         float startAngle = -90f;
@@ -75,5 +88,27 @@ public class Ball : PoolItem<Ball>, IItemEffectable
     public void OnRecieveItem(ItemData data)
     {
         data.ItemEffect(gameObject);
+    }
+
+    public void EnsureMinAxisSpeed()
+    {
+        float x = rbody.linearVelocityX;
+        float y = rbody.linearVelocityY;
+
+        if (Mathf.Abs(x) < epsilonSpeed)
+        {
+            float sign = Mathf.Sign(x);
+            if (sign == 0) sign = (Random.value > 0.5f ? 1f : -1f);
+
+            rbody.linearVelocityX = sign * minEscapeSpeed;
+        }
+
+        if (Mathf.Abs(y) < epsilonSpeed)
+        {
+            float sign = Mathf.Sign(y);
+            if (sign == 0) sign = (Random.value > 0.5f ? 1f : -1f);
+
+            rbody.linearVelocityY = sign * minEscapeSpeed;
+        }
     }
 }
