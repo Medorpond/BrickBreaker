@@ -1,8 +1,17 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class StageManager : BaseManager<StageManager>
 {
-    //TESTONLY
+
+    private void Start()
+    {
+        int currentLv = GameManager.Instance.CurrentLevel;
+        GameObject stagePrefab = GameManager.Instance.LevelDB.stagePrefabs[currentLv];
+        Instantiate(stagePrefab, Vector3.zero, Quaternion.identity);
+    }
+
+
     [HideInInspector] public int totalScore;
 
     public void AddScore(int score){
@@ -22,5 +31,4 @@ public class StageManager : BaseManager<StageManager>
             Time.timeScale = 0;
         }
     }
-    //TESTONLY
 }
