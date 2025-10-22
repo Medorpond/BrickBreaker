@@ -1582,8 +1582,10 @@ MonoBehaviour:
   poolModel: {fileID: 665161175843590582, guid: 9001422ac26622d4187c67e5f382776e, type: 3}
   Items:
   - {fileID: 11400000, guid: 180a2b373f017cc4191b902c7dfaf5d4, type: 2}
-  - {fileID: 11400000, guid: 7b52594da7ec7d1478ae39b7eaa56932, type: 2}
   - {fileID: 11400000, guid: c41e73fbf3964f14a99b3e0fb00a249f, type: 2}
+  - {fileID: 11400000, guid: 75a6389837e75854993354aef5473aac, type: 2}
+  - {fileID: 11400000, guid: 7b52594da7ec7d1478ae39b7eaa56932, type: 2}
+  - {fileID: 11400000, guid: 34fa6372de34b0d4cad515bb2cf81d83, type: 2}
 --- !u!4 &1198394117
 Transform:
   m_ObjectHideFlags: 0
@@ -1593,7 +1595,7 @@ Transform:
   m_GameObject: {fileID: 1198394115}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.8946241, y: -2.3702374, z: 0.048715055}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
