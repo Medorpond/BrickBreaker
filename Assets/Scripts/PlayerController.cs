@@ -1,6 +1,7 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem.LowLevel;
+
 
 public class PlayerController : MonoBehaviour, IItemEffectable
 {
@@ -12,8 +13,22 @@ public class PlayerController : MonoBehaviour, IItemEffectable
     [SerializeField, Min(0)] private float launchPower = 5f;
     [SerializeField, Min(0)] private float ballOffset = 0.5f;
     [SerializeField, Min(0)] private float moveLimit;
+
+    [Header("Paddle Width Set")]
+    public List<float> paddleWidthSteps;
+    public int paddleWidthLevel;
+
+    private int maxWidthLevel;
+
+    SpriteRenderer spriteRenderer;
+    BoxCollider2D paddleCollider;
+
     //TESTONLY
     [SerializeField, Min(0)] private int life = 3;
+
+    private float prevPosX = 0f;
+    private float currentSpeed;
+    public float ballInfluence;
     //TESTONLY
 
 
@@ -22,6 +37,15 @@ public class PlayerController : MonoBehaviour, IItemEffectable
 
     //====================================================
     #region Lifecycle
+
+    private void Awake()
+    {
+        maxWidthLevel = paddleWidthSteps.Count - 1;
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        paddleCollider = GetComponent<BoxCollider2D>();
+
+        ChangeWidthByLevel(paddleWidthLevel);
+    }
 
     private void OnEnable()
     {
@@ -37,10 +61,27 @@ public class PlayerController : MonoBehaviour, IItemEffectable
     private void Update()
     {
         GetUserInput();
+
+
+        //TESTONLY
+        if (Input.GetKeyDown(KeyCode.D))
+        {
+            DecreaseWidth();
+        }else if (Input.GetKeyDown(KeyCode.F))
+        {
+            IncreaseWidth();
+        }
+        //TESTONLY
     }
     private void FixedUpdate()
     {
         Move();
+        currentSpeed = (transform.position.x - prevPosX) / Time.fixedDeltaTime;
+    }
+
+    private void LateUpdate()
+    {
+        MarkCurrentPosX();
     }
 
     private void OnDisable()
@@ -49,6 +90,30 @@ public class PlayerController : MonoBehaviour, IItemEffectable
         ItemManager.Instance.PaddleItem -= OnRecieveItem;
     }
     #endregion
+
+    //====================================================
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if(collision.gameObject.TryGetComponent<Ball>(out var ball))
+        {
+            InfluenceBall(ball);
+        }
+    }
+
+    //====================================================
+
+    private void MarkCurrentPosX() => prevPosX = transform.position.x;
+
+    private void InfluenceBall(Ball ball)
+    {
+        float dirX = Mathf.Sign(currentSpeed);
+        Vector2 Dir = new Vector2(dirX, 0);
+
+        currentSpeed *= ballInfluence;
+
+        ball.Push(Dir, currentSpeed);
+    }
 
     public void Move()
     {
@@ -114,6 +179,29 @@ public class PlayerController : MonoBehaviour, IItemEffectable
         {
             // 아이템 사용 등 (확장 기능)
         }
+    }
+
+    public void IncreaseWidth() => ChangeWidthLevelByDiff(1);
+
+    public void DecreaseWidth() => ChangeWidthLevelByDiff(-1);
+
+    public void ChangeWidthLevelByDiff(int diff)
+    {
+        int newLevel = paddleWidthLevel += diff;
+        ChangeWidthByLevel(newLevel);
+    }
+
+    public void ChangeWidthByLevel(int level)
+    {
+        paddleWidthLevel = Mathf.Clamp(level, 0, maxWidthLevel);
+        SetWidth(paddleWidthSteps[paddleWidthLevel]);
+    }
+
+    public void SetWidth(float width)
+    {
+        float y = spriteRenderer.size.y;
+        spriteRenderer.size = new Vector2(width, y);
+        paddleCollider.size = new Vector2(width, y);
     }
 
     public void OnRecieveItem(ItemData data)

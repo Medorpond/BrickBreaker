@@ -59,6 +59,11 @@ public class Ball : PoolItem<Ball>, IItemEffectable
         Retrieve();
     }
 
+    public void Push(Vector2 dir, float power)
+    {
+        rbody.AddForce(dir * power, ForceMode2D.Impulse);
+    }
+
     public void ShiftSpeedByRate(float shiftRate)
     {
         float curSpeed = rbody.linearVelocity.magnitude;
@@ -73,6 +78,7 @@ public class Ball : PoolItem<Ball>, IItemEffectable
     {
         rbody.linearVelocity = v;
     }
+
 
     private void SetVelocity(float v)
     {
