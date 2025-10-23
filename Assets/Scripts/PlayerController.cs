@@ -24,7 +24,6 @@ public class PlayerController : MonoBehaviour, IItemEffectable
     BoxCollider2D paddleCollider;
 
     //TESTONLY
-    [SerializeField, Min(0)] private int life = 3;
 
     private float prevPosX = 0f;
     private float currentSpeed;
@@ -49,7 +48,7 @@ public class PlayerController : MonoBehaviour, IItemEffectable
 
     private void OnEnable()
     {
-        BallManager.Instance.OnAllBallLost += OnAllBallLost;
+        StageManager.Instance.OnBallLost+= OnAllBallLost;
         ItemManager.Instance.PaddleItem += OnRecieveItem;
     }
 
@@ -86,7 +85,7 @@ public class PlayerController : MonoBehaviour, IItemEffectable
 
     private void OnDisable()
     {
-        BallManager.Instance.OnAllBallLost -= OnAllBallLost;
+        StageManager.Instance.OnBallLost += OnAllBallLost;
         ItemManager.Instance.PaddleItem -= OnRecieveItem;
     }
     #endregion
@@ -124,11 +123,9 @@ public class PlayerController : MonoBehaviour, IItemEffectable
         transform.position = Vector2.Lerp(currentPos, targetPos, lerpSpeed* Time.fixedDeltaTime);
     }
 
-    private void OnAllBallLost()
+    private void OnAllBallLost(int life)
     {
-        life--;
-        if (life <= 0) StageManager.Instance.GameOver(false);
-        else Reload();
+        if (life > 0) Reload();
     }
 
     private void Reload()

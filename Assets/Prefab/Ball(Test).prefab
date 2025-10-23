@@ -167,5 +167,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minSpeed: 4
   maxSpeed: 40
-  minEscapeSpeed: 0.05
+  minEscapeSpeed: 0.01
   epsilonSpeed: 0.0001

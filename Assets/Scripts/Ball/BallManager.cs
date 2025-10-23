@@ -9,7 +9,6 @@ public class BallManager : BaseManager<BallManager>
     public event Action<ItemData> OnBallItemTrigger;
 
     private int ballCount = 0;
-    public event Action OnAllBallLost;
 
     #region LifeCycle
     protected override void Awake()
@@ -56,7 +55,7 @@ public class BallManager : BaseManager<BallManager>
         ballCount--;
         pool.RetrieveItem(ball);
 
-        if (ballCount <= 0) OnAllBallLost?.Invoke();
+        if (ballCount <= 0) StageManager.Instance.OnAllBallLost();
     }
 
     void RecieveBallItem(ItemData item)

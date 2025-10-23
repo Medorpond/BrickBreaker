@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class Ball : PoolItem<Ball>, IItemEffectable
@@ -96,23 +97,22 @@ public class Ball : PoolItem<Ball>, IItemEffectable
         data.ItemEffect(gameObject);
     }
 
-    public void EnsureMinAxisSpeed()
+    private void EnsureMinAxisSpeed()
     {
         float x = rbody.linearVelocityX;
+        Debug.Log(x);
         float y = rbody.linearVelocityY;
-
+        Debug.Log(x);
         if (Mathf.Abs(x) < epsilonSpeed)
         {
-            float sign = Mathf.Sign(x);
-            if (sign == 0) sign = (Random.value > 0.5f ? 1f : -1f);
+            float sign = (Random.value > 0.5f ? 1f : -1f);
 
             rbody.linearVelocityX = sign * minEscapeSpeed;
         }
 
         if (Mathf.Abs(y) < epsilonSpeed)
         {
-            float sign = Mathf.Sign(y);
-            if (sign == 0) sign = (Random.value > 0.5f ? 1f : -1f);
+            float sign = (Random.value > 0.5f ? 1f : -1f);
 
             rbody.linearVelocityY = sign * minEscapeSpeed;
         }
