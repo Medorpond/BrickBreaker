@@ -21,6 +21,7 @@ public class StageManager : BaseManager<StageManager>
 
     public event Action<int> OnScoreChange;
     public event Action<int> OnBallLost;
+    public event Action<int, int> OnCombo;
 
     #region LifeCycle
     protected override void Awake()
@@ -34,6 +35,10 @@ public class StageManager : BaseManager<StageManager>
         int currentLv = GameManager.Instance.CurrentLevel;
         GameObject stagePrefab = GameManager.Instance.LevelDB.stagePrefabs[currentLv];
         Instantiate(stagePrefab, Vector3.zero, Quaternion.identity);
+
+        OnScoreChange?.Invoke(0);
+        OnCombo?.Invoke(0, 0);
+        OnBallLost?.Invoke(life);
     }
     #endregion
 
@@ -42,7 +47,7 @@ public class StageManager : BaseManager<StageManager>
 
     public void AddScore(int score){
         totalScore += score;
-        OnScoreChange.Invoke(totalScore);
+        OnScoreChange?.Invoke(totalScore);
     }
 
     public void GameOver(bool isSuccess)
@@ -66,7 +71,7 @@ public class StageManager : BaseManager<StageManager>
         ComboScore += GetComboScore(score);
         ComboCount++;
         // UI에게 이벤트 발행
-        Debug.Log($"{ComboCount}Combo! Point: {ComboScore}");
+        OnCombo?.Invoke(ComboCount, ComboScore);
 
         if (remainingBrick  <= 0)
         {
@@ -103,6 +108,7 @@ public class StageManager : BaseManager<StageManager>
         //TESTONLY
         ComboScore = 0;
         ComboCount = 0;
+        OnCombo(0, 0);
     }
 
     public void OnAllBallLost()

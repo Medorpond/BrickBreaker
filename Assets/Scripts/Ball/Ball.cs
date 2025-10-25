@@ -100,9 +100,8 @@ public class Ball : PoolItem<Ball>, IItemEffectable
     private void EnsureMinAxisSpeed()
     {
         float x = rbody.linearVelocityX;
-        Debug.Log(x);
         float y = rbody.linearVelocityY;
-        Debug.Log(x);
+        
         if (Mathf.Abs(x) < epsilonSpeed)
         {
             float sign = (Random.value > 0.5f ? 1f : -1f);

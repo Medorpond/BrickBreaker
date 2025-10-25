@@ -52,11 +52,6 @@ public class PlayerController : MonoBehaviour, IItemEffectable
         ItemManager.Instance.PaddleItem += OnRecieveItem;
     }
 
-    private void Start()
-    {
-        Reload();
-    }
-
     private void Update()
     {
         GetUserInput();
