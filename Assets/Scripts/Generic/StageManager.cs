@@ -5,6 +5,15 @@ using UnityEngine;
 
 public class StageManager : BaseManager<StageManager>
 {
+    GameManager gm;
+
+    [Header("Sounds")]
+    [SerializeField] AudioClip pauseSound;
+    [SerializeField] AudioClip resumeSound;
+    [SerializeField] AudioClip gameOverSfx;
+    [SerializeField] AudioClip gameClearSfx;
+    [SerializeField] AudioClip gameClearBgm;
+
     [Header("Player Config")]
     [SerializeField, Min(0)] private int life = 3;
 
@@ -18,32 +27,45 @@ public class StageManager : BaseManager<StageManager>
     private Coroutine ComboWindow = null;
 
     [HideInInspector] public int totalScore;
+    [HideInInspector] public int maxCombo = 0;
 
     public event Action<int> OnScoreChange;
     public event Action<int> OnBallLost;
     public event Action<int, int> OnCombo;
 
+    private bool isGamePaused = false;
+    public event Action OnPause;
+    public event Action OnResume;
+    public event Action<bool, int, int, int, bool> OnGameOver;
+
     #region LifeCycle
     protected override void Awake()
     {
         base.Awake();
+        gm = GameManager.Instance;
         comboWindow = new WaitForSeconds(comboTimeWindow);
     }
 
     private void Start()
     {
-        int currentLv = GameManager.Instance.CurrentLevel;
-        GameObject stagePrefab = GameManager.Instance.LevelDB.stagePrefabs[currentLv];
-        Instantiate(stagePrefab, Vector3.zero, Quaternion.identity);
+        int currentLv = gm.CurrentLevel;
+        LevelData levelData = gm.LevelDB.LevelDatas[currentLv];
+        SoundManager.Instance.ChangeBgmAndPlay(levelData.LevelBgm);
+        Instantiate(levelData.LevelPrefab, Vector3.zero, Quaternion.identity);
 
         OnScoreChange?.Invoke(0);
         OnCombo?.Invoke(0, 0);
         OnBallLost?.Invoke(life);
     }
+
+    private void Update()
+    {
+        GetUserPauseInput();
+    }
     #endregion
 
 
-    
+
 
     public void AddScore(int score){
         totalScore += score;
@@ -52,16 +74,24 @@ public class StageManager : BaseManager<StageManager>
 
     public void GameOver(bool isSuccess)
     {
-        Debug.Log($"Game Over");
+        Time.timeScale = 0f;
         if (isSuccess)
         {
-            Debug.Log("You Win!");
+            SoundManager.Instance.ChangeBgmAndPlay(gameClearBgm);
+            SoundManager.Instance.PlaySfx(gameClearSfx);
         }
         else
         {
-            Debug.Log("You Lose...");
-            Time.timeScale = 0;
+            SoundManager.Instance.PlaySfx(gameOverSfx);
+            SoundManager.Instance.StopBgm();
         }
+
+        OnGameOver?.Invoke(isSuccess, totalScore, life, maxCombo, GameManager.Instance.IsNextStageValid);
+    }
+
+    private void GetUserPauseInput()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape)) TogglePause();
     }
 
     public void OnBrickBreak(int score, int remainingBrick)
@@ -76,8 +106,7 @@ public class StageManager : BaseManager<StageManager>
         if (remainingBrick  <= 0)
         {
             ReportScore();
-            // StageManager.EndGame(isSuccess = true) È£Ãâ
-            Debug.Log("GameOver!");
+            GameOver(true);
         }
         else
         {
@@ -102,10 +131,8 @@ public class StageManager : BaseManager<StageManager>
 
     void ReportScore()
     {
-        // Get GameManager and Report Score;
-        //TESTONLY
         AddScore(ComboScore);
-        //TESTONLY
+        maxCombo = Mathf.Max(maxCombo, ComboCount);
         ComboScore = 0;
         ComboCount = 0;
         OnCombo(0, 0);
@@ -116,5 +143,27 @@ public class StageManager : BaseManager<StageManager>
         life--;
         if (life > 0) OnBallLost.Invoke(life);
         else GameOver(false);
+    }
+
+    public void TogglePause()
+    {
+        if (isGamePaused) ResumeGame();
+        else PauseGame();
+    }
+
+    public void PauseGame()
+    {
+        Time.timeScale = 0f;
+        isGamePaused = true;
+        SoundManager.Instance.PlaySfx(pauseSound);
+        OnPause?.Invoke();
+    }
+
+    public void ResumeGame()
+    {
+        Time.timeScale = 1f;
+        isGamePaused = false;
+        OnResume?.Invoke();
+        SoundManager.Instance.PlaySfx(resumeSound);
     }
 }

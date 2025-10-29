@@ -1,18 +1,27 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 
 public class PlayerController : MonoBehaviour, IItemEffectable
 {
+    StageManager sm;
+    ItemManager im;
+    BallManager bm;
+
     Rigidbody2D rbody;
 
+    [Header("SFXs")]
+    [SerializeField] AudioClip boundSound;
+
     [Header("Paddle Configs")]
-    [SerializeField, Min(0)] private float lerpSpeed = 20f;
+    [SerializeField, Min(0)] private float moveSpeed = 20f;
     //[SerializeField, Min(0)] private float widthRatio = 1f;
     [SerializeField, Min(0)] private float launchPower = 5f;
     [SerializeField, Min(0)] private float ballOffset = 0.5f;
     [SerializeField, Min(0)] private float moveLimit;
+    
 
     [Header("Paddle Width Set")]
     public List<float> paddleWidthSteps;
@@ -23,14 +32,10 @@ public class PlayerController : MonoBehaviour, IItemEffectable
     SpriteRenderer spriteRenderer;
     BoxCollider2D paddleCollider;
 
-    //TESTONLY
-
-    private float prevPosX = 0f;
-    private float currentSpeed;
     public float ballInfluence;
-    //TESTONLY
 
 
+    private Vector2 moveDir;
     private bool isLoaded = false;
     private Ball ball;
 
@@ -39,6 +44,13 @@ public class PlayerController : MonoBehaviour, IItemEffectable
 
     private void Awake()
     {
+        rbody = GetComponent<Rigidbody2D>();
+
+        sm = StageManager.Instance;
+        im = ItemManager.Instance;
+        bm = BallManager.Instance;
+
+
         maxWidthLevel = paddleWidthSteps.Count - 1;
         spriteRenderer = GetComponent<SpriteRenderer>();
         paddleCollider = GetComponent<BoxCollider2D>();
@@ -48,74 +60,46 @@ public class PlayerController : MonoBehaviour, IItemEffectable
 
     private void OnEnable()
     {
-        StageManager.Instance.OnBallLost+= OnAllBallLost;
-        ItemManager.Instance.PaddleItem += OnRecieveItem;
+        sm.OnBallLost += OnAllBallLost;
+        im.PaddleItem += OnRecieveItem;
     }
 
-    private void Update()
-    {
-        GetUserInput();
-
-
-        //TESTONLY
-        if (Input.GetKeyDown(KeyCode.D))
-        {
-            DecreaseWidth();
-        }else if (Input.GetKeyDown(KeyCode.F))
-        {
-            IncreaseWidth();
-        }
-        //TESTONLY
-    }
     private void FixedUpdate()
     {
         Move();
-        currentSpeed = (transform.position.x - prevPosX) / Time.fixedDeltaTime;
-    }
-
-    private void LateUpdate()
-    {
-        MarkCurrentPosX();
     }
 
     private void OnDisable()
     {
-        StageManager.Instance.OnBallLost += OnAllBallLost;
-        ItemManager.Instance.PaddleItem -= OnRecieveItem;
+        sm.OnBallLost += OnAllBallLost;
+        im.PaddleItem -= OnRecieveItem;
     }
     #endregion
 
-    //====================================================
 
-    //private void OnCollisionEnter2D(Collision2D collision)
-    //{
-    //    if(collision.gameObject.TryGetComponent<Ball>(out var ball))
-    //    {
-    //        InfluenceBall(ball);
-    //    }
-    //}
-
-    //====================================================
-
-    private void MarkCurrentPosX() => prevPosX = transform.position.x;
-
-    private void InfluenceBall(Ball ball)
+    private void OnCollisionEnter2D(Collision2D collision)
     {
-        float dirX = Mathf.Sign(currentSpeed);
-        Vector2 Dir = new Vector2(dirX, 0);
-
-        currentSpeed *= ballInfluence;
-
-        ball.Push(Dir, currentSpeed);
+        if (collision.gameObject.TryGetComponent<Ball>(out var ball))
+        {
+            InfluenceBall(ball);
+            SoundManager.Instance.PlaySfx(boundSound);
+        }
     }
 
-    public void Move()
+    private void InfluenceBall(Ball ball) 
     {
-        Vector2 targetPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        Vector2 currentPos = transform.position;
-        targetPos.x = Mathf.Clamp(targetPos.x, -moveLimit, moveLimit);
-        targetPos.y = currentPos.y;
-        transform.position = Vector2.Lerp(currentPos, targetPos, lerpSpeed* Time.fixedDeltaTime);
+        ball.Push(moveDir, moveSpeed * ballInfluence);
+    }
+
+    public void OnMove(InputAction.CallbackContext ctx)
+    {
+        float inputX = ctx.ReadValue<Vector2>().x;
+        moveDir = new Vector2(inputX, 0);
+    }
+
+    private void Move()
+    {
+        rbody.MovePosition(rbody.position + (moveSpeed * moveDir * Time.fixedDeltaTime));
     }
 
     private void OnAllBallLost(int life)
@@ -127,7 +111,7 @@ public class PlayerController : MonoBehaviour, IItemEffectable
     {
         Vector3 initPos = transform.position;
         initPos.y += ballOffset;
-        ball = BallManager.Instance.GetBall(initPos);
+        ball = bm.GetBall(initPos);
         StartCoroutine(LaunchReady());
     }
 
@@ -151,16 +135,10 @@ public class PlayerController : MonoBehaviour, IItemEffectable
         }
     }
 
-    private void GetUserInput()
+    public void OnLaunch(InputAction.CallbackContext ctx)
     {
-        if (Input.GetKeyUp(KeyCode.Mouse0))
-        {
-            OnUserInput();
-        }
-    }
+        if (!ctx.performed) return;
 
-    private void OnUserInput()
-    {
         if (isLoaded)
         {
             Launch();

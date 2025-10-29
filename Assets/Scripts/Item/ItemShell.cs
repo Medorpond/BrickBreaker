@@ -6,6 +6,7 @@ public class ItemShell : PoolItem<ItemShell>
 {
     [HideInInspector] public ItemData data;
     [SerializeField] private float dropSpeed;
+    [SerializeField] AudioClip itemGetSound;
 
     private Rigidbody2D rbody;
 
@@ -22,6 +23,7 @@ public class ItemShell : PoolItem<ItemShell>
         if (data && collision.TryGetComponent<PlayerController>(out var _))
         {
             ItemManager.Instance.InvokeEvent(data);
+            SoundManager.Instance.PlaySfx(itemGetSound);
             data = null;
             Retrieve();
         }

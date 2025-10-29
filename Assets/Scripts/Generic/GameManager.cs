@@ -3,23 +3,39 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : BaseManager<GameManager>
 {
-    private void Update()
-    {
-        //TESTONLY
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            LoadStage(0);
-        }
-        //TESTONLY
-    }
+    #region Lifecycle
+    #endregion
 
     [field: SerializeField] public LevelDatabase LevelDB { get; private set; }
+    public int MaxLv { get; private set; }
     public int CurrentLevel { get; private set; }
+    public bool IsNextStageValid { get; private set; } = true;
+
+    private void Start()
+    {
+        MaxLv = LevelDB.LevelDatas.Count - 1;
+    }
 
     public void LoadStage(int stageId)
     {
         CurrentLevel = stageId;
-        ChangeScene(1);
+        if (CurrentLevel == MaxLv) IsNextStageValid = false;
+        else IsNextStageValid = true;
+        LoadScene(1);
     }
-    public void ChangeScene(int sceneId) => SceneManager.LoadScene(sceneId);
+    public void LoadNextStage()
+    {
+        if (CurrentLevel > MaxLv) LoadLobby();
+        else LoadStage(++CurrentLevel);
+    }
+    public void RetryLevel() => LoadScene(1);
+    public void LoadLobby() => LoadScene(0);
+
+    public void SetScreenMode(FullScreenMode mode) => Screen.fullScreenMode = mode;
+
+    private void LoadScene(int sceneId) 
+    { 
+        Time.timeScale = 1;
+        SceneManager.LoadScene(sceneId);
+    }
 }

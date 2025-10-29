@@ -4,6 +4,7 @@ using UnityEngine;
 public class Brick : MonoBehaviour
 {
     [SerializeField] private int score;
+    [SerializeField] private AudioClip hitSound;
 
     #region Events
     public event Action<Ball> OnHit;
@@ -17,6 +18,7 @@ public class Brick : MonoBehaviour
         if (collision.gameObject.TryGetComponent<Ball>(out var ball))
         {
             OnHit?.Invoke(ball);
+            SoundManager.Instance.PlaySfx(hitSound);
         }
     }
 

@@ -12,5 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 70f53578964ba224ab3e49ad9509484b, type: 3}
   m_Name: LevelDB
   m_EditorClassIdentifier: 
-  stagePrefabs:
-  - {fileID: 6921580893567343465, guid: 0c9f2ba473497b147b7ecc94f4c3b1d3, type: 3}
+  LevelDatas:
+  - LevelPrefab: {fileID: 6921580893567343465, guid: 0c9f2ba473497b147b7ecc94f4c3b1d3, type: 3}
+    LevelBgm: {fileID: 8300000, guid: 559c232a43caebe41870ce54786f604e, type: 3}
+  - LevelPrefab: {fileID: 6921580893567343465, guid: 0c9f2ba473497b147b7ecc94f4c3b1d3, type: 3}
+    LevelBgm: {fileID: 8300000, guid: 51a4f1157b7ff1449b5e5cf064d584c7, type: 3}
+  - LevelPrefab: {fileID: 6921580893567343465, guid: 0c9f2ba473497b147b7ecc94f4c3b1d3, type: 3}
+    LevelBgm: {fileID: 8300000, guid: 89f935015cc98724a862a586326fdf21, type: 3}
+  - LevelPrefab: {fileID: 6921580893567343465, guid: 0c9f2ba473497b147b7ecc94f4c3b1d3, type: 3}
+    LevelBgm: {fileID: 8300000, guid: bef0cef2ded0f0645ad90c6e5bdd4965, type: 3}
+  - LevelPrefab: {fileID: 6921580893567343465, guid: 0c9f2ba473497b147b7ecc94f4c3b1d3, type: 3}
+    LevelBgm: {fileID: 8300000, guid: 1f2ad53bacc245642854dbdc8ea71a9b, type: 3}

@@ -21,7 +21,7 @@ public class BaseManager<T> : MonoBehaviour where T: BaseManager<T>
         }
     }
 
-    [SerializeField] private bool dontDestroyOnLoad = false;
+    [SerializeField] protected bool dontDestroyOnLoad = false;
 
 
     protected virtual void Awake()
@@ -39,5 +39,10 @@ public class BaseManager<T> : MonoBehaviour where T: BaseManager<T>
 
         _instance = this as T;
         if(dontDestroyOnLoad) DontDestroyOnLoad(gameObject);
+    }
+
+    private void OnDestroy()
+    {
+        if (!dontDestroyOnLoad && _instance == this) _instance = null;
     }
 }

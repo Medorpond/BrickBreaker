@@ -165,7 +165,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 490a878298ec4154a984343b7504ed5f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  minSpeed: 4
-  maxSpeed: 40
-  minEscapeSpeed: 0.03
-  epsilonSpeed: 0.001
+  minSpeed: 5
+  maxSpeed: 30
+  minEscapeSpeed: 0.05
+  epsilonSpeed: 0.01

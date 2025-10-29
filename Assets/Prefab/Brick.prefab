@@ -150,6 +150,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   score: 30
+  hitSound: {fileID: 8300000, guid: b43d102aac6b145468dcaa94a5cccae1, type: 3}
 --- !u!114 &6051278458028324764
 MonoBehaviour:
   m_ObjectHideFlags: 0

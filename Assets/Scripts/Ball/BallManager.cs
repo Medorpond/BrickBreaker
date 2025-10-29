@@ -6,6 +6,7 @@ public class BallManager : BaseManager<BallManager>
     [SerializeField] private BallPool poolModel;
     private BallPool pool;
 
+    private ItemManager itemManager;
     public event Action<ItemData> OnBallItemTrigger;
 
     private int ballCount = 0;
@@ -14,17 +15,18 @@ public class BallManager : BaseManager<BallManager>
     protected override void Awake()
     {
         base.Awake();
+        itemManager = ItemManager.Instance;
         InitPool();
     }
 
     private void Start()
     {
-        ItemManager.Instance.BallItem += RecieveBallItem;
+        itemManager.BallItem += RecieveBallItem;
     }
 
     private void OnDestroy()
     {
-        ItemManager.Instance.BallItem -= RecieveBallItem;
+        itemManager.BallItem -= RecieveBallItem;
     }
     #endregion
 

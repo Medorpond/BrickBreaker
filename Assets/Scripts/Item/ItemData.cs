@@ -4,6 +4,5 @@ using UnityEngine;
 public abstract class ItemData: ScriptableObject
 {
     [field: SerializeField] public ItemTarget TargetType { get; protected set; }
-
     public abstract void ItemEffect(GameObject target);
 }

@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class Ball : PoolItem<Ball>, IItemEffectable
 {
+    BallManager bm;
+
     Rigidbody2D rbody;
     [SerializeField, Min(0)] private float minSpeed;
     [SerializeField, Min(0)] private float maxSpeed;
@@ -12,16 +14,17 @@ public class Ball : PoolItem<Ball>, IItemEffectable
     private void Awake()
     {
         rbody = GetComponent<Rigidbody2D>();
+        bm = BallManager.Instance;
     }
 
 
     private void OnEnable()
     {
-        BallManager.Instance.OnBallItemTrigger += OnRecieveItem;
+        bm.OnBallItemTrigger += OnRecieveItem;
     }
     private void OnDisable()
     {
-        BallManager.Instance.OnBallItemTrigger-= OnRecieveItem;
+        bm.OnBallItemTrigger-= OnRecieveItem;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -46,7 +49,7 @@ public class Ball : PoolItem<Ball>, IItemEffectable
 
         for(int i = 1; i <= num; i++)
         {
-            if(BallManager.Instance.TryGetBall(this.transform.position, out var newBall))
+            if(bm.TryGetBall(this.transform.position, out var newBall))
             {
                 float currentAngle = startAngle + (i * angleStep);
 
@@ -89,7 +92,7 @@ public class Ball : PoolItem<Ball>, IItemEffectable
 
     public override void Retrieve()
     {
-        BallManager.Instance.RetrieveBall(this);
+        bm.RetrieveBall(this);
     }
 
     public void OnRecieveItem(ItemData data)
