@@ -18,8 +18,8 @@ MonoBehaviour:
   - LevelPrefab: {fileID: 6921580893567343465, guid: 0c9f2ba473497b147b7ecc94f4c3b1d3, type: 3}
     LevelBgm: {fileID: 8300000, guid: 51a4f1157b7ff1449b5e5cf064d584c7, type: 3}
   - LevelPrefab: {fileID: 6921580893567343465, guid: 0c9f2ba473497b147b7ecc94f4c3b1d3, type: 3}
+    LevelBgm: {fileID: 8300000, guid: 06906d718be5b6a4cb2df8732bf39832, type: 3}
+  - LevelPrefab: {fileID: 6921580893567343465, guid: 0c9f2ba473497b147b7ecc94f4c3b1d3, type: 3}
     LevelBgm: {fileID: 8300000, guid: 89f935015cc98724a862a586326fdf21, type: 3}
   - LevelPrefab: {fileID: 6921580893567343465, guid: 0c9f2ba473497b147b7ecc94f4c3b1d3, type: 3}
     LevelBgm: {fileID: 8300000, guid: bef0cef2ded0f0645ad90c6e5bdd4965, type: 3}
-  - LevelPrefab: {fileID: 6921580893567343465, guid: 0c9f2ba473497b147b7ecc94f4c3b1d3, type: 3}
-    LevelBgm: {fileID: 8300000, guid: 1f2ad53bacc245642854dbdc8ea71a9b, type: 3}

@@ -78,7 +78,7 @@ public class Lobby : MonoBehaviour
     #region StageUI
     private void InitStageList()
     {
-        int stageSize = gm.MaxLv;
+        int stageSize = gm.MaxLv + 1;
 
         for(int i = 0; i < stageSize; i++)
         {
