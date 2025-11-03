@@ -59,7 +59,7 @@ public class ItemManager : BaseManager<ItemManager>
         var item = pool.GetItem(initPos);
 
         int index = UnityEngine.Random.Range(0, Items.Count);
-        item.data = Items[index];
+        item.SetData(Items[index]);
     }
 }
 

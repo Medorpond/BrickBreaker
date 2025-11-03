@@ -18,5 +18,6 @@ public class StageButton : MonoBehaviour
     {
         buttonText.text = text;
         button.onClick.AddListener(() => OnClickAction());
+        button.onClick.AddListener(SoundManager.Instance.PlayDefaultUISound);
     }
 }

@@ -244,3 +244,4 @@ MonoBehaviour:
   bgmSource: {fileID: 5956042826275386778}
   sfxSource: {fileID: 2031996896717072705}
   muffleRate: 0.4
+  DefaultUISound: {fileID: 8300000, guid: 29bde6326b4c34ad8a12da475f79b50a, type: 3}

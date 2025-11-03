@@ -11,8 +11,9 @@ public class GameManager : BaseManager<GameManager>
     public int CurrentLevel { get; private set; }
     public bool IsNextStageValid { get; private set; } = true;
 
-    private void Start()
+    protected override void Awake()
     {
+        base.Awake();
         MaxLv = LevelDB.LevelDatas.Count - 1;
     }
 
@@ -37,5 +38,11 @@ public class GameManager : BaseManager<GameManager>
     { 
         Time.timeScale = 1;
         SceneManager.LoadScene(sceneId);
+    }
+
+    public void ExitGame()
+    {
+        PlayerPrefs.Save();
+        Application.Quit();
     }
 }

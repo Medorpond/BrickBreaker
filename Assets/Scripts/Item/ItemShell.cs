@@ -8,12 +8,17 @@ public class ItemShell : PoolItem<ItemShell>
     [SerializeField] private float dropSpeed;
     [SerializeField] AudioClip itemGetSound;
 
+    private SpriteRenderer spriteRenderer;
+
     private Rigidbody2D rbody;
 
     private void Awake()
     {
         rbody = GetComponent<Rigidbody2D>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
     }
+    
+
     private void FixedUpdate()
     {
         rbody.MovePosition(rbody.position + dropSpeed * Time.fixedDeltaTime * Vector2.down);
@@ -27,5 +32,11 @@ public class ItemShell : PoolItem<ItemShell>
             data = null;
             Retrieve();
         }
+    }
+
+    public void SetData(ItemData _data)
+    {
+        data = _data;
+        spriteRenderer.sprite = _data.ItemSprite;
     }
 }

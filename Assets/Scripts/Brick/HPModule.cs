@@ -1,15 +1,21 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class HPModule : BrickModule
 {
     private Brick brick;
 
-    [SerializeField] private int maxHP;
+    [SerializeField, Range(1, 4)] private int maxHP;
+    [SerializeField] private List<Sprite> HPSprite;
+
+    private SpriteRenderer spriteRenderer;
     private int currentHP;
+
 
     private void Awake()
     {
         brick = GetComponent<Brick>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     private void OnEnable()
@@ -30,14 +36,19 @@ public class HPModule : BrickModule
     public override void InitModule()
     {
         currentHP = maxHP;
+        UpdateSprite();
     }
 
     public override void OnHit(Ball ball)
     {
-        // 현재는 Damage 1 고정
-        // 추후 게임 설계에 따라 ball.damage 만큼 데미지 입도록 변경
-
         currentHP--;
+        
         if (currentHP <= 0) brick.Break();
+        else UpdateSprite();
+    }
+
+    private void UpdateSprite()
+    {
+        spriteRenderer.sprite = HPSprite[currentHP - 1];
     }
 }

@@ -16,8 +16,8 @@ public class PlayerController : MonoBehaviour, IItemEffectable
     [SerializeField] AudioClip boundSound;
 
     [Header("Paddle Configs")]
+    [SerializeField, Min(0)] private int life = 3;
     [SerializeField, Min(0)] private float moveSpeed = 20f;
-    //[SerializeField, Min(0)] private float widthRatio = 1f;
     [SerializeField, Min(0)] private float launchPower = 5f;
     [SerializeField, Min(0)] private float ballOffset = 0.5f;
     [SerializeField, Min(0)] private float moveLimit;
@@ -57,21 +57,23 @@ public class PlayerController : MonoBehaviour, IItemEffectable
 
         ChangeWidthByLevel(paddleWidthLevel);
     }
+    private void Start()
+    {
+        Reload();
+        StageManager.Instance.ReportLifeChange(life);
+    }
 
     private void OnEnable()
     {
-        sm.OnBallLost += OnAllBallLost;
+        bm.OnAllBallLost += OnAllBallLost;
         im.PaddleItem += OnRecieveItem;
     }
 
-    private void FixedUpdate()
-    {
-        Move();
-    }
+
 
     private void OnDisable()
     {
-        sm.OnBallLost += OnAllBallLost;
+        bm.OnAllBallLost += OnAllBallLost;
         im.PaddleItem -= OnRecieveItem;
     }
     #endregion
@@ -88,22 +90,22 @@ public class PlayerController : MonoBehaviour, IItemEffectable
 
     private void InfluenceBall(Ball ball) 
     {
-        ball.Push(moveDir, moveSpeed * ballInfluence);
+        Vector2 Dir = rbody.linearVelocity.normalized;
+        ball.Push(Dir, moveSpeed * ballInfluence);
     }
 
     public void OnMove(InputAction.CallbackContext ctx)
     {
         float inputX = ctx.ReadValue<Vector2>().x;
         moveDir = new Vector2(inputX, 0);
+
+        rbody.linearVelocity = moveSpeed * moveDir.normalized;
     }
 
-    private void Move()
+    private void OnAllBallLost()
     {
-        rbody.MovePosition(rbody.position + (moveSpeed * moveDir * Time.fixedDeltaTime));
-    }
-
-    private void OnAllBallLost(int life)
-    {
+        life--;
+        StageManager.Instance.ReportLifeChange(life);
         if (life > 0) Reload();
     }
 

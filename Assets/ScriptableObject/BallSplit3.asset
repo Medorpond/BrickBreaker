@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: BallSplit3
   m_EditorClassIdentifier: 
   <TargetType>k__BackingField: 1
+  <ItemSprite>k__BackingField: {fileID: -6509232630430761034, guid: 6f41522d0cd334845bd8363bfbf14508, type: 3}
   splitQuantity: 3

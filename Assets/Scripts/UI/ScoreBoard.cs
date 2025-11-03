@@ -27,22 +27,28 @@ public class ScoreBoard : MonoBehaviour
         sm = StageManager.Instance;
         maxHeartImage = lifeUI.Count;
     }
+
+    private void Start()
+    {
+        UpdateScoreUI(0);
+        UpdateComboStatus(0, 0);
+    }
     private void OnEnable()
     {
         sm.OnScoreChange += UpdateScoreUI;
-        sm.OnBallLost += UpdateLifeUI;
+        sm.OnLifeChange += UpdateLifeUI;
         sm.OnCombo += UpdateComboStatus;
     }
 
     private void OnDisable()
     {
         sm.OnScoreChange -= UpdateScoreUI;
-        sm.OnBallLost -= UpdateLifeUI;
+        sm.OnLifeChange -= UpdateLifeUI;
         sm.OnCombo -= UpdateComboStatus;
     }
     #endregion
 
-    public void UpdateScoreUI(int score) => scoreUI.text = $"Score: {ModifyIntToString(score)}";
+    public void UpdateScoreUI(int score) => scoreUI.text = $"{ModifyIntToString(score)}";
     public void UpdateLifeUI(int life)
     {
         if (life > maxHeartImage)
@@ -70,12 +76,13 @@ public class ScoreBoard : MonoBehaviour
     }
     public void UpdateComboStatus(int comboCount, int comboScore)
     {
-        comboCountUI.text = $"Combo: x{ModifyIntToString(comboCount, 6)}!";
+        comboCountUI.text = $"x{ModifyIntToString(comboCount, 4)}!";
         comboScoreUI.text = $"{ModifyIntToString(comboScore)}";
     }
 
-    private string ModifyIntToString(int num, int blankSize = 8)
-    {
+    private string ModifyIntToString(int num, int blankSize = 6)
+    { 
+
         int length = 0;
         int temp = num;
         while(temp > 0)
@@ -83,6 +90,8 @@ public class ScoreBoard : MonoBehaviour
             length++;
             temp /= 10;
         }
+        if (num == 0) length++;
+
         blankSize -= length;
         if (blankSize <= 0) return num.ToString();
 

@@ -12,10 +12,8 @@ GameObject:
   - component: {fileID: 362804495438367452}
   - component: {fileID: 8307156997654304383}
   - component: {fileID: 8095675776711293124}
-  - component: {fileID: 6051278458028324764}
-  - component: {fileID: 8310407999135583485}
   m_Layer: 6
-  m_Name: Brick
+  m_Name: BaseBrick
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -30,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 1272746060584409659}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1.755, y: 1.077, z: 0.02969837}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -80,7 +78,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 1856104526, guid: 03f20fe6ee061ff41b2aa2f770fb294f, type: 3}
+  m_Sprite: {fileID: -594342194, guid: 03f20fe6ee061ff41b2aa2f770fb294f, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -101,7 +99,7 @@ BoxCollider2D:
   m_Enabled: 1
   serializedVersion: 3
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 774f014069a2c4e46a19b9f7ede86d24, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -151,29 +149,3 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   score: 30
   hitSound: {fileID: 8300000, guid: b43d102aac6b145468dcaa94a5cccae1, type: 3}
---- !u!114 &6051278458028324764
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1272746060584409659}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a50cde90ac6e5dd42b8aa41a7520739e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxHP: 1
---- !u!114 &8310407999135583485
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1272746060584409659}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ce286504317f8bd4594dc2a76600b78f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  dropRate: 0.5

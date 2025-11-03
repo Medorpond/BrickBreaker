@@ -9,6 +9,9 @@ public class SoundManager : BaseManager<SoundManager>
     [Header("Params")]
     [SerializeField] float muffleRate = 0.4f;
 
+    [Header("AudioClips")]
+    [SerializeField] AudioClip DefaultUISound;
+
     public float MasterVol { get; private set; } = 1f;
     public float BgmVol { get; private set; } = 1f;
     public float SfxVol { get; private set; } = 1f;
@@ -94,5 +97,7 @@ public class SoundManager : BaseManager<SoundManager>
         bgmSource.Play();
     }
     public void StopBgm() => bgmSource.Stop();
-    
+
+    public void PlayDefaultUISound() => PlaySfx(DefaultUISound);
+
 }

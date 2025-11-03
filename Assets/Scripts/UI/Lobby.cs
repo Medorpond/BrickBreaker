@@ -15,7 +15,7 @@ public class Lobby : MonoBehaviour
     [SerializeField] private CanvasGroup Configs;
 
     [SerializeField] private Button playBtn;
-    [SerializeField] private Button ConfigBtn;
+    [SerializeField] private Button exitBtn;
 
     private CanvasGroup previousCanvas;
     private CanvasGroup currentCanvas;
@@ -47,7 +47,7 @@ public class Lobby : MonoBehaviour
     private void SetButtonListeners()
     {
         playBtn.onClick.AddListener(() => SwitchCanvasGroup(StageList));
-        ConfigBtn.onClick.AddListener(() => SwitchCanvasGroup(Configs));
+        exitBtn.onClick.AddListener(GameManager.Instance.ExitGame);
     }
 
 

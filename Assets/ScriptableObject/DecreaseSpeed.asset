@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: DecreaseSpeed
   m_EditorClassIdentifier: 
   <TargetType>k__BackingField: 1
+  <ItemSprite>k__BackingField: {fileID: -732372539595204411, guid: 1585baba2ee03da4ba6e35d5e6207b30, type: 3}
   speedChangeRate: -0.2

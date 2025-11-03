@@ -30,6 +30,18 @@ public class Ball : PoolItem<Ball>, IItemEffectable
     private void OnCollisionEnter2D(Collision2D collision)
     {
         EnsureMinAxisSpeed();
+        ClampSpeed();
+        PlayCollisionEffect(collision);
+    }
+
+    private void PlayCollisionEffect(Collision2D collision)
+    {
+        VFXItem effect = VFXManager.Instance.GetEffect(VFXManager.EffectType.Bounce, collision.contacts[0].point);
+
+        Vector2 effectDir = collision.relativeVelocity.normalized * -1;
+        float angle = Mathf.Atan2(effectDir.y, effectDir.x) * Mathf.Rad2Deg;
+        Quaternion rotation = Quaternion.Euler(0, 0, angle + 90f);
+        effect.PlayAnim(rotation);
     }
 
     public void Split(int num)
@@ -118,5 +130,12 @@ public class Ball : PoolItem<Ball>, IItemEffectable
 
             rbody.linearVelocityY = sign * minEscapeSpeed;
         }
+    }
+
+    private void ClampSpeed()
+    {
+        var speed = rbody.linearVelocity.magnitude;
+        speed = Mathf.Clamp(speed, minSpeed, maxSpeed);
+        SetVelocity(speed);
     }
 }

@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: DecreaseWidth
   m_EditorClassIdentifier: 
   <TargetType>k__BackingField: 0
+  <ItemSprite>k__BackingField: {fileID: 2615916725690148560, guid: d4f3de7a4b4455f4ebcd129be0d790a8, type: 3}
   widthLevelDiff: -1

@@ -8,6 +8,7 @@ public class BallManager : BaseManager<BallManager>
 
     private ItemManager itemManager;
     public event Action<ItemData> OnBallItemTrigger;
+    public event Action OnAllBallLost;
 
     private int ballCount = 0;
 
@@ -56,8 +57,8 @@ public class BallManager : BaseManager<BallManager>
     {
         ballCount--;
         pool.RetrieveItem(ball);
-
-        if (ballCount <= 0) StageManager.Instance.OnAllBallLost();
+        
+        if (ballCount <= 0) OnAllBallLost.Invoke();
     }
 
     void RecieveBallItem(ItemData item)

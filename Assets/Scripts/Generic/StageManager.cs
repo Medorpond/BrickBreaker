@@ -14,9 +14,6 @@ public class StageManager : BaseManager<StageManager>
     [SerializeField] AudioClip gameClearSfx;
     [SerializeField] AudioClip gameClearBgm;
 
-    [Header("Player Config")]
-    [SerializeField, Min(0)] private int life = 3;
-
     [Header("Combo Config")]
     [SerializeField] private float comboTimeWindow;
     private WaitForSeconds comboWindow;
@@ -30,13 +27,15 @@ public class StageManager : BaseManager<StageManager>
     [HideInInspector] public int maxCombo = 0;
 
     public event Action<int> OnScoreChange;
-    public event Action<int> OnBallLost;
     public event Action<int, int> OnCombo;
+    public event Action<int> OnLifeChange;
 
     private bool isGamePaused = false;
     public event Action OnPause;
     public event Action OnResume;
     public event Action<bool, int, int, int, bool> OnGameOver;
+
+    private int currentLife;
 
     #region LifeCycle
     protected override void Awake()
@@ -51,11 +50,8 @@ public class StageManager : BaseManager<StageManager>
         int currentLv = gm.CurrentLevel;
         LevelData levelData = gm.LevelDB.LevelDatas[currentLv];
         SoundManager.Instance.ChangeBgmAndPlay(levelData.LevelBgm);
-        Instantiate(levelData.LevelPrefab, Vector3.zero, Quaternion.identity);
-
-        OnScoreChange?.Invoke(0);
-        OnCombo?.Invoke(0, 0);
-        OnBallLost?.Invoke(life);
+        Vector3 Spawnpos = new Vector3(0, -0.25f, 0);
+        Instantiate(levelData.LevelPrefab, Spawnpos, Quaternion.identity);
     }
 
     private void Update()
@@ -86,7 +82,7 @@ public class StageManager : BaseManager<StageManager>
             SoundManager.Instance.StopBgm();
         }
 
-        OnGameOver?.Invoke(isSuccess, totalScore, life, maxCombo, GameManager.Instance.IsNextStageValid);
+        OnGameOver?.Invoke(isSuccess, totalScore, currentLife, maxCombo, GameManager.Instance.IsNextStageValid);
     }
 
     private void GetUserPauseInput()
@@ -138,11 +134,11 @@ public class StageManager : BaseManager<StageManager>
         OnCombo(0, 0);
     }
 
-    public void OnAllBallLost()
+    public void ReportLifeChange(int life)
     {
-        life--;
-        if (life > 0) OnBallLost.Invoke(life);
-        else GameOver(false);
+        currentLife = life;
+        OnLifeChange?.Invoke(life);
+        if (life <= 0) GameOver(false);
     }
 
     public void TogglePause()

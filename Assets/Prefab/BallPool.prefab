@@ -45,5 +45,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   model: {fileID: 6515819788536359573, guid: 4b73a9dddc303a94780844d15a1067d8, type: 3}
-  initSize: 50
-  <MaxSize>k__BackingField: 100
+  initSize: 5
+  <MaxSize>k__BackingField: 10
