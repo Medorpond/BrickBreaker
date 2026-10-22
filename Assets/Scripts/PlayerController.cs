@@ -73,7 +73,7 @@ public class PlayerController : MonoBehaviour, IItemEffectable
 
     private void OnDisable()
     {
-        bm.OnAllBallLost += OnAllBallLost;
+        bm.OnAllBallLost -= OnAllBallLost;
         im.PaddleItem -= OnRecieveItem;
     }
     #endregion
@@ -149,7 +149,7 @@ public class PlayerController : MonoBehaviour, IItemEffectable
         }
         else
         {
-            // ¾ÆÀÌÅÛ »ç¿ë µî (È®Àå ±â´É)
+            // Â¾Ã†Ã€ÃŒÃ…Ã› Â»Ã§Â¿Ã« ÂµÃ® (ÃˆÂ®Ã€Ã¥ Â±Ã¢Â´Ã‰)
         }
     }
 
